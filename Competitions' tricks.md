@@ -23,6 +23,7 @@
 ### some kits
 
 > - `scikit-image` 
+> - `external attention`： 一个用于学习attention以及方便调用的[repo](https://github.com/xmu-xiaoma666/External-Attention-pytorch)
 > - 
 
 
@@ -42,7 +43,7 @@
 > + ~~~python
 >   ## 一套用法
 >   einsum(equation, *operands)
->     
+>       
 >   1
 >   ~~~
 >
@@ -80,18 +81,18 @@
 >           focal_loss: A float32 scalar representing normalized total loss.
 >         """    
 >         BCLoss = F.binary_cross_entropy_with_logits(input = logits, target = labels,reduction = "none")
->     
+>         
 >         if gamma == 0.0:
 >             modulator = 1.0
 >         else:
 >             modulator = torch.exp(-gamma * labels * logits - gamma * torch.log(1 + 
 >                 torch.exp(-1.0 * logits)))
->     
+>         
 >         loss = modulator * BCLoss
->     
+>         
 >         weighted_loss = alpha * loss
 >         focal_loss = torch.sum(weighted_loss)
->     
+>         
 >         focal_loss /= torch.sum(labels)
 >         return 
 >     ~~~
@@ -117,16 +118,16 @@
 >         effective_num = 1.0 - np.power(beta, samples_per_cls)
 >         weights = (1.0 - beta) / np.array(effective_num)
 >         weights = weights / np.sum(weights) * no_of_classes
->     
+>         
 >         labels_one_hot = F.one_hot(labels, no_of_classes).float()
->     
+>         
 >         weights = torch.tensor(weights).float()
 >         weights = weights.unsqueeze(0)
 >         weights = weights.repeat(labels_one_hot.shape[0],1) * labels_one_hot
 >         weights = weights.sum(1)
 >         weights = weights.unsqueeze(1)
 >         weights = weights.repeat(1,no_of_classes)
->     
+>         
 >         if loss_type == "focal":
 >             cb_loss = focal_loss(labels_one_hot, logits, weights, gamma)
 >         elif loss_type == "sigmoid":
@@ -135,7 +136,7 @@
 >             pred = logits.softmax(dim = 1)
 >             cb_loss = F.binary_cross_entropy(input = pred, target = labels_one_hot, weight = weights)
 >         return cb_loss
->     
+>         
 >     ~~~
 >
 >   - 
@@ -209,21 +210,21 @@
 >     - ~~~python
 >       text_descriptions = [f"This is a photo of a {label}" for label in cifar100.classes]
 >       text_tokens = clip.tokenize(text_descriptions).cuda()
->       
+>             
 >       with torch.no_grad():
 >           text_features = model.encode_text(text_tokens).float()
 >           text_features /= text_features.norm(dim=-1, keepdim=True)
->       
+>             
 >       text_probs = (100.0 * image_features @ text_features.T).softmax(dim=-1)
 >       top_probs, top_labels = text_probs.cpu().topk(5, dim=-1)
 >       # 可视化
 >       plt.figure(figsize=(16, 16))
->       
+>             
 >       for i, image in enumerate(original_images):
 >           plt.subplot(4, 4, 2 * i + 1)
 >           plt.imshow(image)
 >           plt.axis("off")
->       
+>             
 >           plt.subplot(4, 4, 2 * i + 2)
 >           y = np.arange(top_probs.shape[-1])
 >           plt.grid()
@@ -232,7 +233,7 @@
 >           plt.gca().set_axisbelow(True)
 >           plt.yticks(y, [cifar100.classes[index] for index in top_labels[i].numpy()])
 >           plt.xlabel("probability")
->       
+>             
 >       plt.subplots_adjust(wspace=0.5)
 >       plt.show()
 >       ~~~
@@ -244,7 +245,6 @@
 > [FixRes](https://arxiv.org/abs/1906.06423)
 >
 > - 用`original resolution`训练以后用更大的resolution进行finetune
-> - 
 
 ## 可视化
 
