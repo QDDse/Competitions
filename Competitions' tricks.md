@@ -23,8 +23,7 @@
 ### some kits
 
 > - `scikit-image` 
-> - `external attention`： 一个用于学习attention以及方便调用的[repo](https://github.com/xmu-xiaoma666/External-Attention-pytorch)
-> - 
+> - `FightingCV`: 用于学习以及直接调用的[repo](https://github.com/xmu-xiaoma666/FightingCV-Paper-Reading)
 
 
 
@@ -245,6 +244,7 @@
 > [FixRes](https://arxiv.org/abs/1906.06423)
 >
 > - 用`original resolution`训练以后用更大的resolution进行finetune
+> - 
 
 ## 可视化
 
