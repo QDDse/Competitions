@@ -249,6 +249,8 @@
 
 ## 5. 模型参数
 
+### 5.1 EMA(指数移动平均)
+
 > - `EMA（指数移动平均）`:  
 >
 >   - ~~~python
@@ -305,10 +307,25 @@
 >         ema.restore()
 >                     
 >     ~~~
->
->     
->
->   - 
+
+### 5.2 Early-Stop
+
+~~~ python
+## 手动进行早停 （es == patience）
+if val_acc > best_acc:
+    best_acc = val_acc
+    es = 0
+    torch.save(net.state_dict(), "model_" + str(fold) + 'weight.pt')
+else:
+    es += 1
+    print("Counter {} of 5".format(es))
+
+    if es > 4:
+        print("Early stopping with best_acc: ", best_acc, "and val_acc for this epoch: ", val_acc, "...")
+        break
+~~~
+
+
 
 ## 可视化
 
