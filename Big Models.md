@@ -132,9 +132,30 @@
 > - 每个token只会路由给一个Expert
 > - DP、MP、Expert P
 
-
-
 ### 3.4.3 Export Choice -- 
+
+
+
+### 3.4.4 Vision-MoE
+
+[V-MoE repo](https://github.com/google-research/vmoe/tree/main/vmoe)
+
+> `Contribution`：
+>
+> - 对于`FFN` 进行Router 分配
+>
+> - 对比Vanille ViT， FLOPS减少的情况下JFT300M@1 acc 以及imagenet5SHot都胜过ViT
+>
+> - `Batch Priority Routing`:
+>   - `Predefined buffer` ： 为每个export预定义一个buffer-size，当分配的tokens超过该export的buffer上限时，drop or not process。更大的buffer capacity会提高性能但是会导致cost。![](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/AVvXsEgOgAXLqIiYhplKl8FaR9Q6ryDSqzBT4tSlq5gHA41HLjZe0p4KAzLtrLElthgamOwS2Ii07l3fkrZ0MqTUVIRRjwSynWUpglTM7jzu8P8ahewkDp4189puFE4d-hd7UkMALpU0oDAWHyPJg4xBolTw8f7xCisqoa8petv0N0IQcn55cGLYAaRzp16N9Q%253Ds1600.gif)
+>   
+>     
+>   
+> - ![](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/AVvXsEi_t3DCZxIbfi1HHX6bwJ_zDDiT6-tZ1ysVxlq-JVqZ6LUuKRFr4U9ZilxPA86rE4gfwi75ZE4TRzsgcCx9yKHN9NBaB5tkxVLYDP24H48bRuadXbFYJ92rVNGpycKkM_LWigqoWnvHf7yqOi7AHkCvUHgf9YDk6K1Hj8eqAoVnYs13kd_FVXSbC3ZrIw%253Ds670.png)
+
+### 3.4.5 SF-MoE
+
+
 
 ## MPI通信的方式
 
