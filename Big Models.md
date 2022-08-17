@@ -1,4 +1,4 @@
-# Big Models
+# Big Models (SY实习notes)、
 
 [TOC]
 
@@ -147,6 +147,7 @@
 > - 对比Vanille ViT， FLOPS减少的情况下JFT300M@1 acc 以及imagenet5SHot都胜过ViT
 >
 > - `Batch Priority Routing`:
+>   
 >   - `Predefined buffer` ： 为每个export预定义一个buffer-size，当分配的tokens超过该export的buffer上限时，drop or not process。更大的buffer capacity会提高性能但是会导致cost。![](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/AVvXsEgOgAXLqIiYhplKl8FaR9Q6ryDSqzBT4tSlq5gHA41HLjZe0p4KAzLtrLElthgamOwS2Ii07l3fkrZ0MqTUVIRRjwSynWUpglTM7jzu8P8ahewkDp4189puFE4d-hd7UkMALpU0oDAWHyPJg4xBolTw8f7xCisqoa8petv0N0IQcn55cGLYAaRzp16N9Q%253Ds1600.gif)
 >   
 >     
@@ -207,3 +208,12 @@
 ![image-20220719155535958](C:\Users\int.zihao.gong\Pictures\image-20220719155535958.png)
 
 >K 个处理器中的每一个来自各个处理进程N个值聚合成维度为K*N的输出，输出按照rank排序
+
+
+
+
+
+## Workspace
+
+### 1. Tools 之 Einsum， Einops
+
