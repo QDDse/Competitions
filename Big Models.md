@@ -132,9 +132,14 @@
 > - 每个token只会路由给一个Expert
 > - DP、MP、Expert P
 
-### 3.4.3 Export Choice -- 
+### 3.4.3 Export Choice -- 改进传统的Token-Choice
 
-
+> - `Token-Choice`：
+>   - 传统MoE（Convenient MoE) 通过Token选择Top-K experts进行路由
+>   - 会导致**sub-optimal trainig** 的缺陷
+> - `Load-Imbalance`: 负载不均衡，传统MoE通过辅助loss function（auxiliary loss），但是并不能很好保证负载均衡；同时辅助函数与主损失进行加权，增加了模型的复杂性。
+> - `Under Specialization`: trade-off of load-balance and specialization
+> - `Same Compute for tokens`: 每个token都选择fixed number expert，而不能根据输入的复杂性进行调整。
 
 ### 3.4.4 Vision-MoE
 
