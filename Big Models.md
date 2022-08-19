@@ -217,3 +217,7 @@
 
 ### 1. Tools 之 Einsum， Einops
 
+### 2. Vision MoE
+
+#### 2.1 V-MoE
+
