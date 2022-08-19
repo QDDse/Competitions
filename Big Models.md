@@ -20,14 +20,14 @@
 >   - `Synchronous`: BSP， 需要等待其他worker
 >   - `Asynchronous`: ASP， 异步并行
 > - `Bucketing Gradients`: DDP
->   - ![img](C:\Users\int.zihao.gong\OneDrive\Notes\images\pytorch-ddp.png)
+>   - ![img](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/pytorch-ddp.png)
 
 
 
 > `Model Parallelism`:
 >
 > - Naive MP:
->   - ![img](C:\Users\int.zihao.gong\OneDrive\Notes\images\naive-data-parallelism.png)
+>   - ![img](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/naive-data-parallelism.png)
 >   - 将model按照layer的顺序分配到workers，但是会造成`GPU利用严重不足`
 
 
@@ -35,7 +35,7 @@
 > `Pipeline Parallelism`
 >
 > - `Gpipe`
-> - ![img](C:\Users\int.zihao.gong\OneDrive\Notes\images\pipedream.png)
+> - ![img](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/pipedream.png)
 
 
 
@@ -48,7 +48,7 @@
 - inter-layer: 层间， layer-leve并行
 - intra-layer：层内， data-level 并行 
 
-![img](C:\Users\int.zihao.gong\OneDrive\Notes\images\Megatron-LM.png)
+![img](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/Megatron-LM.png)
 
 
 
@@ -162,13 +162,13 @@
 
 ### Broadcast
 
-![img](C:\Users\int.zihao.gong\Pictures\qg6ezsg9va.png)
+![img](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/qg6ezsg9va.png)
 
 - 一份相同得data 广播给不同得device
 
 ### Scatter
 
-![image.png](C:\Users\int.zihao.gong\Pictures\3g453iuups.png)
+![image.png](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/3g453iuups.png)
 
 - 可以将不同得data 分发给不同得device
 
@@ -176,7 +176,7 @@
 
 ### Gather
 
-![image.png](C:\Users\int.zihao.gong\Pictures\j8hraqv1fl.png)
+![image.png](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/j8hraqv1fl.png)
 
 - 将不同进程的data拼凑在一起
 
@@ -184,16 +184,16 @@
 
 ### Reduce（整合）
 
-![image.png](C:\Users\int.zihao.gong\Pictures\g76vn718of.png)
+![image.png](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/g76vn718of.png)
 
-![image.png](C:\Users\int.zihao.gong\Pictures\pa6i3nzijd.png)
+![image.png](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/pa6i3nzijd.png)
 
 - 将多个进程的data 按照given mapping function（映射函数）运算 （F）的结果存在一个进程中，F为<font size=3, color=red>归约操作</font>。 上图中都是sum（求和）
 - 操作与ALLreduce相同，但是仅将**结果写入指定跟级别的接受缓冲区**
 
 ### All-reduce
 
-![image.png](C:\Users\int.zihao.gong\Pictures\ai75r9ggk5.png)
+![image.png](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/ai75r9ggk5.png)
 
 
 
@@ -201,11 +201,11 @@
 
 ### All-gather --- 强调整合在一起
 
-![image-20220719111140542](C:\Users\int.zihao.gong\Pictures\image-20220719111140542.png)
+![image-20220719111140542](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/image-20220719111140542.png)
 
 
 
-![image-20220719155535958](C:\Users\int.zihao.gong\Pictures\image-20220719155535958.png)
+![image-20220719155535958](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/image-20220719155535958.png)
 
 >K 个处理器中的每一个来自各个处理进程N个值聚合成维度为K*N的输出，输出按照rank排序
 
