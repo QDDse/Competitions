@@ -163,6 +163,31 @@
 
 
 
+### 3.4.6 MoQ -- Mixture of Quantization
+
+> - `Deepspeed`: 提出通过模型压缩（model compression）
+
+
+
+### 3.4.7 Deep-Speed MoE --- （PR-MoE， MoS）
+
+> - `Challenges of Convient MoE`:
+>   - `Limited Scope`: MoE目前只能应用在encoder-decoder，seq2seq tasks。
+>   - `Massive Memory Requirements`：alse called `parameter efficiency`, 通常一个MoE 稀疏模型是dense-counterparts 10x的参数量。T5-model可以在单卡V100 32G fit，MT-NLG（500B）对应的sparse model理论上需要5k GPUs
+>   - `INference Performance`: 推理同样需要10x以上的带宽（memory bandwidth）， 推理延迟（inference latency）更加依赖于model-szie，memory-bandwidth，从memory中读取数据的capabilities。
+
+> - `Solutions`:
+>
+>   - 扩展MoE至NLG tasks
+>
+>   - `PR-MoE && MoS`: 
+>
+>     - `PR-MoE`: Pyramid-Residual MoE，只在最有效的地方应用MoE
+>
+>     ![image-20220822164908539](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/image-20220822164908539.png)
+>
+>     - `MoS`: 知识蒸馏版的PR-MoE, 减少了3.7x的model size 同时保持了comparable model quality
+
 ## MPI通信的方式
 
 ### Broadcast
