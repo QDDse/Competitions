@@ -109,7 +109,11 @@
 
 ### 3.4 Latest Study
 
+> - 
+
 #### 3.4.1 GShard -- 扩展MoE transformer 至600B参数
+
+[]()
 
 > - `Sharded MoE` 仅仅将MoE layers 分片到不同的node上，其他layers简单复制
 > - `impoved `：
@@ -122,6 +126,12 @@
 
 ### 3.4.2 Switch Transformer -- 扩展到Trillion级别
 
+[Switch]: https://arxiv.org/abs/2101.03961
+
+[Simple Achieve](https://nn.labml.ai/transformers/switch/index.html)
+
+
+
 > `Some Designs`: 
 >
 > - `Selective Precision`:  fp32精度在router主体使用，results recast 回FP16
@@ -133,6 +143,8 @@
 > - DP、MP、Expert P
 
 ### 3.4.3 Export Choice -- 改进传统的Token-Choice
+
+[](https://arxiv.org/abs/2202.09368)
 
 > - `Token-Choice`：
 >   - 传统MoE（Convenient MoE) 通过Token选择Top-K experts进行路由
@@ -148,24 +160,31 @@
 > `Contribution`：
 >
 > - 对于`FFN` 进行Router 分配
->
 > - 对比Vanille ViT， FLOPS减少的情况下JFT300M@1 acc 以及imagenet5SHot都胜过ViT
->
 > - `Batch Priority Routing`:
->   
->   - `Predefined buffer` ： 为每个export预定义一个buffer-size，当分配的tokens超过该export的buffer上限时，drop or not process。更大的buffer capacity会提高性能但是会导致cost。![](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/AVvXsEgOgAXLqIiYhplKl8FaR9Q6ryDSqzBT4tSlq5gHA41HLjZe0p4KAzLtrLElthgamOwS2Ii07l3fkrZ0MqTUVIRRjwSynWUpglTM7jzu8P8ahewkDp4189puFE4d-hd7UkMALpU0oDAWHyPJg4xBolTw8f7xCisqoa8petv0N0IQcn55cGLYAaRzp16N9Q%253Ds1600.gif)
->   
->     
->   
+>
+>   - `Predefined buffer` ： 为每个export预定义一个buffer-size，当分配的tokens超过该export的buffer上限时，drop or not process。更大的buffer capacity会提高性能但是会导致cost。
+>   - 对token 进行重要性排序，按照重要性大小舍弃掉分数不高得tokens.
+>   - ![](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/AVvXsEgOgAXLqIiYhplKl8FaR9Q6ryDSqzBT4tSlq5gHA41HLjZe0p4KAzLtrLElthgamOwS2Ii07l3fkrZ0MqTUVIRRjwSynWUpglTM7jzu8P8ahewkDp4189puFE4d-hd7UkMALpU0oDAWHyPJg4xBolTw8f7xCisqoa8petv0N0IQcn55cGLYAaRzp16N9Q%253Ds1600.gif)
+>
+> 
+>
 > - ![](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/AVvXsEi_t3DCZxIbfi1HHX6bwJ_zDDiT6-tZ1ysVxlq-JVqZ6LUuKRFr4U9ZilxPA86rE4gfwi75ZE4TRzsgcCx9yKHN9NBaB5tkxVLYDP24H48bRuadXbFYJ92rVNGpycKkM_LWigqoWnvHf7yqOi7AHkCvUHgf9YDk6K1Hj8eqAoVnYs13kd_FVXSbC3ZrIw%253Ds670.png)
+
+`capacity ratio` :signal_strength:定义为capacity / tokens recived per device
+
+
 
 ### 3.4.5 SF-MoE
 
 
 
-### 3.4.6 MoQ -- Mixture of Quantization
+### 3.4.6 Swin-MoE（Microsoft） TUTEL 
 
-> - `Deepspeed`: 提出通过模型压缩（model compression）
+[Swin-transformer](https://github.com/microsoft/Swin-Transformer)
+
+> - TUTEl 由微软建立并于fairseq toolkit进行合并
+> - TUTEL 实现了Swin-TransformerV2 MoE
 
 
 
