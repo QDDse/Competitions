@@ -241,7 +241,13 @@
 
 
 
+### AlltoAll
 
+![image-20220823111002003](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/image-20220823111002003.png)
+
+> `P0`包含[0,1,2,3,4], 将0赋值给自己，1传给P1，2传给P2....
+>
+> - All-to-All 定制通讯也叫做全部交换，常用于各种并行算法中，如快速傅里叶，矩阵变换。。
 
 ## Workspace
 
