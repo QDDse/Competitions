@@ -106,10 +106,14 @@
 
 
 > - 均衡问题
+>   - 辅助loss function
 
-### 3.4 Latest Study
+### 3.4 Latest Study -- (现有的框架)
 
-> - 
+> - **Meta** ： `fairseq` , `BASE Layers`
+> - **Google**: `GShard`
+> - **Tsinghua-U** : `FasterMoE`
+> - **Microsoft**： `TUTEL`
 
 #### 3.4.1 GShard -- 扩展MoE transformer 至600B参数
 
@@ -185,8 +189,12 @@
 
 > - TUTEl 由微软建立并于fairseq toolkit进行合并
 > - TUTEL 实现了Swin-TransformerV2 MoE
+> - `Contributions`:
+>   -  by adaptive methods for dynamic MoE workload at any scale.
+>   - adaptive parallelism switching and adaptive pipelining
+>   - 2-dimention Hierarchical all-to-all algorithm
 
-
+![image-20220825103738672](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/image-20220825103738672.png)
 
 ### 3.4.7 Deep-Speed MoE --- （PR-MoE， MoS）
 
