@@ -276,6 +276,14 @@
 >
 > - All-to-All 定制通讯也叫做全部交换，常用于各种并行算法中，如快速傅里叶，矩阵变换。。
 
+
+
+## torch.distributed
+
+- `distributed.init_process_group(): 多个进程同步并通信，建立多进程分布式group`
+  - `world_size`: 总的进程数
+- `nn.utils.data.DistributedSampler`: 为各个进程切分数据以保证数据non-overlap
+
 ## Workspace
 
 ### 1. Tools 之 Einsum， Einops
