@@ -215,6 +215,24 @@
 >
 >     - `MoS`: 知识蒸馏版的PR-MoE, 减少了3.7x的model size 同时保持了comparable model quality
 
+
+
+### 3.4.8 LIMoE --- (Multimodal the Language Image Mixture of Experts)
+
+[LIMoE](https://ai.googleblog.com/2022/06/limoe-learning-multiple-modalities-with.html) [Arxiv](https://arxiv.org/pdf/2206.02770.pdf)
+
+![](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgSZvvfrRuopj58bPE0B7bGxdeJKRbksIrdWOdF_MC4N2fndx6-rfEt0E9IzI4Qag_sTtGm9vFzv-2y_iOOLHhu2oFJ9lRK-lqpyypFBow3cz9beeDHu6Ji9ePTQcWv6B6RSWUZG6CBqkbLuG_JGm7nehPnMQ_sqtcUGH5_ll6K5sOvMXfvC1zCZ_Y9qg/s1600/image3.gif)
+
+​		                                                                                                 **LIMoE Architecture**
+
+
+
+> `Contributions`:
+>
+> - `New auxiliary loss`
+> - `BPR`: Routing prioritization <font color=red>(非本文提出)</font>>
+> -  
+
 ## MPI通信的方式
 
 ### Broadcast
