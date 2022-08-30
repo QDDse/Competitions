@@ -19,11 +19,11 @@
 >       def __init__(self, dim, num_heads=8, qkv_bias=False, qk_scale=None, attn_drop=0., proj_drop=0., sr_ratio=1):
 >           super(Attention, self).__init__()
 >           assert dim % num_heads == 0
->                 
+>                   
 >           self.dim = dim
 >           self.num_heads = num_heads
 >           head_dim = dim // num_heads
->                 
+>                   
 >           self.scale = qk_scale or head_dim ** -0.5
 >           self.q = nn.Linear(dim, dim, bias=qkv_bias)
 >           self.kv = nn.Linear(dim, dim * 2, bias=qkv_bias)
@@ -35,7 +35,7 @@
 >           if sr_ratio > 1:
 >               self.sr = nn.Conv2d(dim, dim, kernel_size=sr_ratio, stride=sr_ratio)
 >               self.norm = nn.LayerNorm(dim)
->                 
+>                   
 >       def forward(self, x, H, W):
 >           B, N, C = x.shape
 >           q = self.q(x).reshape(B, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3)
@@ -51,12 +51,12 @@
 >               kv = self.kv(x).reshape(B, -1, 2, self.num_heads, C // self.num_heads).permute(2,0,3,1,4)
 >               print('kv_shape:{}'.format(kv.shape))
 >           k, v = kv[0], kv[1]  # (B, H, n, c)
->                 
+>                   
 >           attn = (q @ k.transpose(-2, -1)) * self.scale
 >           print('attn_shape:{}'.format(attn.shape))
 >           attn = attn.softmax(dim=-1)
 >           attn = self.attn_drop(attn)
->                 
+>                   
 >           x = (attn @ v).transpose(1,2).reshape(B, N, C)
 >           print('output_shape:{}'.format(x.shape))
 >           x = self.proj(x)
@@ -119,7 +119,7 @@
 >               self.kv = nn.Linear(dim, dim * 2, bias=qkv_bias)
 >               self.local_conv = nn.Conv2d(dim, dim, kernel_size=3, padding=1, stride=1, groups=dim)
 >           self.apply(self._init_weights)
->        
+>          
 >       def forward(self, x, H, W):
 >           B, N, C = x.shape
 >           q = self.q(x).reshape(B, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3)
@@ -145,7 +145,7 @@
 >                                           transpose(1, 2).view(B, C//2, H*2//self.sr_ratio, W*2//self.sr_ratio)).\
 >                       view(B, C//2, -1).view(B, self.num_heads//2, C // self.num_heads, -1).transpose(-1, -2)
 >                   x2 = (attn2 @ v2).transpose(1, 2).reshape(B, N, C//2)
->        
+>          
 >                   x = torch.cat([x1,x2], dim=-1)
 >           else:
 >               kv = self.kv(x).reshape(B, -1, 2, self.num_heads, C // self.num_heads).permute(2, 0, 3, 1, 4)
@@ -174,7 +174,7 @@
 >             self.act = act_layer()
 >             self.fc2 = nn.Linear(hidden_features, out_features)
 >             self.drop = nn.Dropout(drop)
->              
+>                  
 >         def forward(self, x, H, W):
 >             x = self.fc1(x)
 >             x = self.act(x + self.dwconv(x, H, W))  # 残差连接，这里和图画的顺序不一样，图应该画错了
@@ -182,12 +182,12 @@
 >             x = self.fc2(x)
 >             x = self.drop(x)
 >             return x
->              
+>                  
 >     class DWConv(nn.Module):
 >         def __init__(self, dim=768):
 >             super(DWConv, self).__init__()
 >             self.dwconv = nn.Conv2d(dim, dim, 3, 1, 1, bias=True, groups=dim)
->              
+>                  
 >         def forward(self, x, H, W):
 >             B, N, C = x.shape
 >             x = x.transpose(1, 2).view(B, C, H, W)
@@ -302,6 +302,14 @@ model = Net().to(device)
 > - [`知乎`](https://zhuanlan.zhihu.com/p/417106453)
 >
 > - [`Arxiv`](https://arxiv.org/pdf/2107.00641.pdf)
+
+------
+
+# Self-Supervisied Learning
+
+## 2. MIM (Mask Image Model)
+
+### 2.1 BEiT (BERT in CV)
 
 
 
