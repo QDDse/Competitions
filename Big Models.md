@@ -112,7 +112,7 @@
 
 > - **Meta** ： `fairseq` , `BASE Layers`
 > - **Google**: `GShard`
-> - **Tsinghua-U** : `FasterMoE`
+> - **Tsinghua-U** : `FasterMoE ` （FastMoE的改进）
 > - **Microsoft**： `TUTEL`
 
 #### 3.4.1 GShard -- 扩展MoE transformer 至600B参数
@@ -231,7 +231,22 @@
 >
 > - `New auxiliary loss`
 > - `BPR`: Routing prioritization <font color=red>(非本文提出)</font>>
-> -  
+
+
+
+### 3.4.9 [GLaM: Efficient Scaling of Language Models with Mixture-of-Experts](https://ai.googleblog.com/2021/12/more-efficient-in-context-learning-with.html)
+
+[paper](https://arxiv.org/abs/2112.06905)  `Generalist Language Model`: 通用的语言MoE模型
+
+> - `对比GPT-3`， 都是decoder only model
+> - 构建了一个Trillion-level dataset，从网上爬取的文本利用训练好的filter 进行过滤挑选除高质量的text
+> - `Parameters`： 1.2T （64 experts per layer and 32 MoE layers）
+> - 激活97B（8% of 1.2T）
+> - [`GSPMD`](https://ai.googleblog.com/2021/12/general-and-scalable-parallelization.html):  本文中用到该architecture
+
+![img](https://blogger.googleusercontent.com/img/a/AVvXsEhKmA36iEaxIj0bSi7IUfctim-muB1B695evFlPNoqkiIbD_mVkkbdslk6HNwEXCBJmGsvxyDYsNTS7-YzZlblcQa2St498_RPwm72uz6jrK8mooPA6-wN4vqNswF-MG8JEPsgj7R4Rsm60Xh1xVLQtSeYrfhNEG4pr-7MbTHYdxjbug845Fy5smz17ZA=w402-h640)
+
+
 
 ## MPI通信的方式
 

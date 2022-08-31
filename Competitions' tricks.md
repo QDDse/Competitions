@@ -472,7 +472,7 @@ else:
 >
 > `Demo`:
 >
-> ~~~1python
+> ~~~python
 > !pip install wandb -Uq
 > import wandb
 > import torch
