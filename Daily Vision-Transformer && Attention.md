@@ -19,11 +19,19 @@
 >       def __init__(self, dim, num_heads=8, qkv_bias=False, qk_scale=None, attn_drop=0., proj_drop=0., sr_ratio=1):
 >           super(Attention, self).__init__()
 >           assert dim % num_heads == 0
+<<<<<<< HEAD
 >               
 >           self.dim = dim
 >           self.num_heads = num_heads
 >           head_dim = dim // num_heads
 >               
+=======
+>                   
+>           self.dim = dim
+>           self.num_heads = num_heads
+>           head_dim = dim // num_heads
+>                   
+>>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
 >           self.scale = qk_scale or head_dim ** -0.5
 >           self.q = nn.Linear(dim, dim, bias=qkv_bias)
 >           self.kv = nn.Linear(dim, dim * 2, bias=qkv_bias)
@@ -35,7 +43,11 @@
 >           if sr_ratio > 1:
 >               self.sr = nn.Conv2d(dim, dim, kernel_size=sr_ratio, stride=sr_ratio)
 >               self.norm = nn.LayerNorm(dim)
+<<<<<<< HEAD
 >               
+=======
+>                   
+>>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
 >       def forward(self, x, H, W):
 >           B, N, C = x.shape
 >           q = self.q(x).reshape(B, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3)
@@ -51,12 +63,20 @@
 >               kv = self.kv(x).reshape(B, -1, 2, self.num_heads, C // self.num_heads).permute(2,0,3,1,4)
 >               print('kv_shape:{}'.format(kv.shape))
 >           k, v = kv[0], kv[1]  # (B, H, n, c)
+<<<<<<< HEAD
 >               
+=======
+>                   
+>>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
 >           attn = (q @ k.transpose(-2, -1)) * self.scale
 >           print('attn_shape:{}'.format(attn.shape))
 >           attn = attn.softmax(dim=-1)
 >           attn = self.attn_drop(attn)
+<<<<<<< HEAD
 >               
+=======
+>                   
+>>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
 >           x = (attn @ v).transpose(1,2).reshape(B, N, C)
 >           print('output_shape:{}'.format(x.shape))
 >           x = self.proj(x)
@@ -73,6 +93,8 @@
 ### 1.2 CoAtNet -- 结合CNN与Transformer
 
 ### 1.3 Shunted Transformer
+
+[`**知乎**`](https://zhuanlan.zhihu.com/p/450244412)
 
 > `Novelty`：
 >
@@ -117,7 +139,11 @@
 >               self.kv = nn.Linear(dim, dim * 2, bias=qkv_bias)
 >               self.local_conv = nn.Conv2d(dim, dim, kernel_size=3, padding=1, stride=1, groups=dim)
 >           self.apply(self._init_weights)
+<<<<<<< HEAD
 >      
+=======
+>          
+>>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
 >       def forward(self, x, H, W):
 >           B, N, C = x.shape
 >           q = self.q(x).reshape(B, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3)
@@ -143,7 +169,11 @@
 >                                           transpose(1, 2).view(B, C//2, H*2//self.sr_ratio, W*2//self.sr_ratio)).\
 >                       view(B, C//2, -1).view(B, self.num_heads//2, C // self.num_heads, -1).transpose(-1, -2)
 >                   x2 = (attn2 @ v2).transpose(1, 2).reshape(B, N, C//2)
+<<<<<<< HEAD
 >      
+=======
+>          
+>>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
 >                   x = torch.cat([x1,x2], dim=-1)
 >           else:
 >               kv = self.kv(x).reshape(B, -1, 2, self.num_heads, C // self.num_heads).permute(2, 0, 3, 1, 4)
@@ -172,7 +202,11 @@
 >             self.act = act_layer()
 >             self.fc2 = nn.Linear(hidden_features, out_features)
 >             self.drop = nn.Dropout(drop)
+<<<<<<< HEAD
 >          
+=======
+>                  
+>>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
 >         def forward(self, x, H, W):
 >             x = self.fc1(x)
 >             x = self.act(x + self.dwconv(x, H, W))  # 残差连接，这里和图画的顺序不一样，图应该画错了
@@ -180,12 +214,20 @@
 >             x = self.fc2(x)
 >             x = self.drop(x)
 >             return x
+<<<<<<< HEAD
 >          
+=======
+>                  
+>>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
 >     class DWConv(nn.Module):
 >         def __init__(self, dim=768):
 >             super(DWConv, self).__init__()
 >             self.dwconv = nn.Conv2d(dim, dim, 3, 1, 1, bias=True, groups=dim)
+<<<<<<< HEAD
 >          
+=======
+>                  
+>>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
 >         def forward(self, x, H, W):
 >             B, N, C = x.shape
 >             x = x.transpose(1, 2).view(B, C, H, W)
@@ -295,6 +337,7 @@ class Net(nn.Module):
 model = Net().to(device)
 ~~~
 
+<<<<<<< HEAD
 
 
 ## About Transformer
@@ -355,5 +398,75 @@ def relative_to_absolute(q):
     final_x = flat_x_padded.reshape(b, h, l + 1, 2 * l - 1)
     final_x = final_x[:, :, :l, (l - 1):]
     return final_x
+=======
+### 1.5 Focal Transformer ----- (NIPS2021)
+
+> - [`知乎`](https://zhuanlan.zhihu.com/p/417106453)
+>
+> - [`Arxiv`](https://arxiv.org/pdf/2107.00641.pdf)
+
+------
+
+# Self-Supervisied Learning
+
+## 2. MIM (Mask Image Model)
+
+### 2.1 BEiT (BERT in CV)
+
+
+
+## *Modules
+
+### 1. Hornet---- `gnConv`
+
+![preview](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/v2-e5945dd4540aa19f36b3a66a7117778d_r.jpg)
+
+~~~python
+## 官方实现 GnConv2d
+### GnConv 本身是sequence2sequence module： 输入输出为同维度
+### 可以insert to model中间层
+def get_dwconv(dim, kernel, bias):
+    return nn.Conv2d()
+class gnconv(nn.Module):
+    def __init__(self, dim, order=5, gflayer=None, h=14, w=8, s=1.0):
+        super().__init__()
+        self.order = order
+        self.dims = [dim // 2 ** i for i in range(order)]  ## dim,dim/2,dim/4,dim/8,dim/16
+        self.dims.reverse()                                ## dim/16.dim/8,dim/4,dim/2,dim
+        self.proj_in = nn.Conv2d(dim, 2*dim, 1)
+
+        if gflayer is None:
+            self.dwconv = get_dwconv(sum(self.dims), 7, True)
+        else:
+            self.dwconv = gflayer(sum(self.dims), h=h, w=w)
+        
+        self.proj_out = nn.Conv2d(dim, dim, 1)
+        ## dim/16-->dim/8.... point-wise Conv
+        self.pws = nn.ModuleList(
+            [nn.Conv2d(self.dims[i], self.dims[i+1], 1) for i in range(order-1)]
+        )
+
+        self.scale = s
+        print('[gnconv]', order, 'order with dims=', self.dims, 'scale=%.4f'%self.scale)
+
+    def forward(self, x, mask=None, dummy=False):
+        B, C, H, W = x.shape
+
+        fused_x = self.proj_in(x) ## C-->2C
+        ## dims=[1,2,4,8,16] if dim == 16
+        pwa, abc = torch.split(fused_x, (self.dims[0], sum(self.dims)), dim=1)
+        ## pwa:(B,dim/16, H,W) 
+        dw_abc = self.dwconv(abc) * self.scale
+
+        dw_list = torch.split(dw_abc, self.dims, dim=1)
+        x = pwa * dw_list[0]  # (B, dim/16, H,W) *
+
+        for i in range(self.order -1):
+            x = self.pws[i](x) * dw_list[i+1]
+
+        x = self.proj_out(x) 
+
+        return x
+>>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
 ~~~
 
