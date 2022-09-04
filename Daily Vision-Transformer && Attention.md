@@ -19,11 +19,11 @@
 >       def __init__(self, dim, num_heads=8, qkv_bias=False, qk_scale=None, attn_drop=0., proj_drop=0., sr_ratio=1):
 >           super(Attention, self).__init__()
 >           assert dim % num_heads == 0
->             
+>               
 >           self.dim = dim
 >           self.num_heads = num_heads
 >           head_dim = dim // num_heads
->             
+>               
 >           self.scale = qk_scale or head_dim ** -0.5
 >           self.q = nn.Linear(dim, dim, bias=qkv_bias)
 >           self.kv = nn.Linear(dim, dim * 2, bias=qkv_bias)
@@ -35,7 +35,7 @@
 >           if sr_ratio > 1:
 >               self.sr = nn.Conv2d(dim, dim, kernel_size=sr_ratio, stride=sr_ratio)
 >               self.norm = nn.LayerNorm(dim)
->             
+>               
 >       def forward(self, x, H, W):
 >           B, N, C = x.shape
 >           q = self.q(x).reshape(B, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3)
@@ -51,12 +51,12 @@
 >               kv = self.kv(x).reshape(B, -1, 2, self.num_heads, C // self.num_heads).permute(2,0,3,1,4)
 >               print('kv_shape:{}'.format(kv.shape))
 >           k, v = kv[0], kv[1]  # (B, H, n, c)
->             
+>               
 >           attn = (q @ k.transpose(-2, -1)) * self.scale
 >           print('attn_shape:{}'.format(attn.shape))
 >           attn = attn.softmax(dim=-1)
 >           attn = self.attn_drop(attn)
->             
+>               
 >           x = (attn @ v).transpose(1,2).reshape(B, N, C)
 >           print('output_shape:{}'.format(x.shape))
 >           x = self.proj(x)
@@ -117,7 +117,7 @@
 >               self.kv = nn.Linear(dim, dim * 2, bias=qkv_bias)
 >               self.local_conv = nn.Conv2d(dim, dim, kernel_size=3, padding=1, stride=1, groups=dim)
 >           self.apply(self._init_weights)
->    
+>      
 >       def forward(self, x, H, W):
 >           B, N, C = x.shape
 >           q = self.q(x).reshape(B, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3)
@@ -143,7 +143,7 @@
 >                                           transpose(1, 2).view(B, C//2, H*2//self.sr_ratio, W*2//self.sr_ratio)).\
 >                       view(B, C//2, -1).view(B, self.num_heads//2, C // self.num_heads, -1).transpose(-1, -2)
 >                   x2 = (attn2 @ v2).transpose(1, 2).reshape(B, N, C//2)
->    
+>      
 >                   x = torch.cat([x1,x2], dim=-1)
 >           else:
 >               kv = self.kv(x).reshape(B, -1, 2, self.num_heads, C // self.num_heads).permute(2, 0, 3, 1, 4)
@@ -172,7 +172,7 @@
 >             self.act = act_layer()
 >             self.fc2 = nn.Linear(hidden_features, out_features)
 >             self.drop = nn.Dropout(drop)
->      
+>          
 >         def forward(self, x, H, W):
 >             x = self.fc1(x)
 >             x = self.act(x + self.dwconv(x, H, W))  # 残差连接，这里和图画的顺序不一样，图应该画错了
@@ -180,12 +180,12 @@
 >             x = self.fc2(x)
 >             x = self.drop(x)
 >             return x
->      
+>          
 >     class DWConv(nn.Module):
 >         def __init__(self, dim=768):
 >             super(DWConv, self).__init__()
 >             self.dwconv = nn.Conv2d(dim, dim, 3, 1, 1, bias=True, groups=dim)
->      
+>          
 >         def forward(self, x, H, W):
 >             B, N, C = x.shape
 >             x = x.transpose(1, 2).view(B, C, H, W)
@@ -293,5 +293,67 @@ class Net(nn.Module):
 
 
 model = Net().to(device)
+~~~
+
+
+
+## About Transformer
+
+### 1. Position Encoding && Position Embedding
+
+- `Position encoding`: from Vanille ViT :
+
+~~~python
+## 实现sinusoid position vec
+def _get_sinusoid_encoding_table(self, n_position, d_hid):
+        ''' Sinusoid position encoding table '''
+        # TODO: make it with torch instead of numpy
+
+        def get_position_angle_vec(position):
+            # this part calculate the position In brackets
+            return [position / np.power(10000, 2 * (hid_j // 2) / d_hid) for hid_j in range(d_hid)]
+
+        sinusoid_table = np.array([get_position_angle_vec(pos_i) for pos_i in range(n_position)])
+        # [:, 0::2] are all even subscripts, is dim_2i
+        sinusoid_table[:, 0::2] = np.sin(sinusoid_table[:, 0::2])  # dim 2i
+        sinusoid_table[:, 1::2] = np.cos(sinusoid_table[:, 1::2])  # dim 2i+1
+
+        return torch.FloatTensor(sinusoid_table).unsqueeze(0)
+~~~
+
+- `Position Embedding`: Each position of the sequence will be mapped to a trainable vec of size ==dim==
+
+~~~python
+## init abs position
+pos_embID = torch.nn.Parameter(torch.randn(max_seq_tokens, dim))
+## during forward pass
+input_to_trm_mhsa = input_embedding + pos_embID[:current_seq_tokens, :]
+
+out = transformer(input_to_trm_mhsa)
+
+## relative position emb
+import torch
+import torch.nn as nn
+from einops import rearrange
+
+# borrowed from lucidrains
+#https://github.com/lucidrains/bottleneck-transformer-pytorch/blob/main/bottleneck_transformer_pytorch/bottleneck_transformer_pytorch.py#L21
+def relative_to_absolute(q):
+    """
+    Converts the dimension that is specified from the axis
+    from relative distances (with length 2*tokens-1) to absolute distance (length tokens)
+      Input: [bs, heads, length, 2*length - 1]
+      Output: [bs, heads, length, length]
+    """
+    b, h, l, _, device, dtype = *q.shape, q.device, q.dtype
+    dd = {'device': device, 'dtype': dtype}
+    col_pad = torch.zeros((b, h, l, 1), **dd)
+    x = torch.cat((q, col_pad), dim=3)  # zero pad 2l-1 to 2l
+    flat_x = rearrange(x, 'b h l c -> b h (l c)')
+    flat_pad = torch.zeros((b, h, l - 1), **dd)
+    flat_x_padded = torch.cat((flat_x, flat_pad), dim=2)
+    final_x = flat_x_padded.reshape(b, h, l + 1, 2 * l - 1)
+    final_x = final_x[:, :, :l, (l - 1):]
+    return final_x
 ~~~
 
