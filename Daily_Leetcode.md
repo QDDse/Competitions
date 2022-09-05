@@ -555,3 +555,33 @@ public:
 ## 常量
 
 - `字面量` ---
+
+## Data Structure
+
+### 1. Priority Queue
+
+> - `top`: 访问队头元素
+> - `empty`: 队列是否空
+> - `size`: return 队列中元素个数
+> - `push`:插入元素到队尾（并排序）
+> - `emplace`:原地构建一个元素并插入队列
+> - `pop`: 弹出队头元素
+> - `swap`: 交换内容
+
+~~~cpp
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+int main(){
+    priority_queue<pair<int, int>> a;
+    priority_queue<pair<int ,int>, less<int>> b; // 大顶堆
+    priority_queue<pair<int, int>, greater<int>> c; //小顶堆
+    
+}
+~~~
+
+
+
+
+
