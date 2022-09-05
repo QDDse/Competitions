@@ -17,16 +17,16 @@
 >         cut_rat = np.sqrt(1. - lam)
 >         cut_w = np.int(W * cut_rat)
 >         cut_h = np.int(H * cut_rat)
->                   
+>                     
 >         # uniform
 >         cx = np.random.randint(W)
 >         cy = np.random.randint(H)
->                   
+>                     
 >         bbx1 = np.clip(cx - cut_w // 2, 0, W)
 >         bby1 = np.clip(cy - cut_h // 2, 0, H)
 >         bbx2 = np.clip(cx + cut_w // 2, 0, W)
 >         bby2 = np.clip(cy + cut_h // 2, 0, H)
->                   
+>                     
 >         return bbx1, bby1, bbx2, bby2
 >     def cutmix(data, targets1, targets2, targets3, alpha):
 >         indices = torch.randperm(data.size(0))
@@ -34,27 +34,27 @@
 >         shuffled_targets1 = targets1[indices]
 >         shuffled_targets2 = targets2[indices]
 >         shuffled_targets3 = targets3[indices]
->                   
+>                     
 >         lam = np.random.beta(alpha, alpha)
 >         bbx1, bby1, bbx2, bby2 = rand_bbox(data.size(), lam)
 >         data[:, :, bbx1:bbx2, bby1:bby2] = data[indices, :, bbx1:bbx2, bby1:bby2]
 >         # adjust lambda to exactly match pixel ratio
 >         lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (data.size()[-1] * data.size()[-2]))
->                   
+>                     
 >         targets = [targets1, shuffled_targets1, targets2, shuffled_targets2, targets3, shuffled_targets3, lam]
 >         return data, targets
->                   
+>                     
 >     def mixup(data, targets1, targets2, targets3, alpha):
 >         indices = torch.randperm(data.size(0))
 >         shuffled_data = data[indices]
 >         shuffled_targets1 = targets1[indices]
 >         shuffled_targets2 = targets2[indices]
 >         shuffled_targets3 = targets3[indices]
->                   
+>                     
 >         lam = np.random.beta(alpha, alpha)
 >         data = data * lam + shuffled_data * (1 - lam)
 >         targets = [targets1, shuffled_targets1, targets2, shuffled_targets2, targets3, shuffled_targets3, lam]
->                   
+>                     
 >         return data, targets
 >     ~~~
 >
@@ -103,7 +103,7 @@
 > + ~~~python
 >   ## 一套用法
 >   einsum(equation, *operands)
->                             
+>                               
 >   1
 >   ~~~
 >
@@ -148,12 +148,12 @@
 >         else:
 >             modulator = torch.exp(-gamma * labels * logits - gamma * torch.log(1 + 
 >                 torch.exp(-1.0 * logits)))
->                         
+>                             
 >         loss = modulator * BCLoss
->                         
+>                             
 >         weighted_loss = alpha * loss
 >         focal_loss = torch.sum(weighted_loss)
->                         
+>                             
 >         focal_loss /= torch.sum(labels)
 >         return 
 >     ~~~
@@ -188,9 +188,8 @@
 > 
 >     focal_loss /= torch.sum(labels)
 >     return 
-> ~~~
+> 
 > ```
->>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
 ### 2.2 Lbael Smooth 
 > - `CB_Loss`
 >
@@ -213,16 +212,16 @@
 >         effective_num = 1.0 - np.power(beta, samples_per_cls)
 >         weights = (1.0 - beta) / np.array(effective_num)
 >         weights = weights / np.sum(weights) * no_of_classes
->                         
+>                             
 >         labels_one_hot = F.one_hot(labels, no_of_classes).float()
->                         
+>                             
 >         weights = torch.tensor(weights).float()
 >         weights = weights.unsqueeze(0)
 >         weights = weights.repeat(labels_one_hot.shape[0],1) * labels_one_hot
 >         weights = weights.sum(1)
 >         weights = weights.unsqueeze(1)
 >         weights = weights.repeat(1,no_of_classes)
->                         
+>                             
 >         if loss_type == "focal":
 >             cb_loss = focal_loss(labels_one_hot, logits, weights, gamma)
 >         elif loss_type == "sigmoid":
@@ -231,85 +230,32 @@
 >             pred = logits.softmax(dim = 1)
 >             cb_loss = F.binary_cross_entropy(input = pred, target = labels_one_hot, weight = weights)
 >         return cb_loss
->                         
+>                             
 >     ~~~
 
 - `Label-Smoothing`:
 >
 >  - ~~~python
->    ## 标准的CEloss
->    class CELoss(nn.Module):
->                 
->    ## Label Smoothing
->    class CELoss(nn.Module):
->        ''' Cross Entropy Loss with label smoothing 
->        	该lable-smoothing 仅支持label为非one-hot编码格式
->        	         
->        	label_smooth: 平滑ratio  通常取较小的值（如0.05）
->        	class_num: 对输入的target进行onehot编码的参数： F.one_hot(target, class_num)
->        '''
-<<<<<<< HEAD
->             
->        def __init__(self, label_smooth=None, class_num=137):
->            super().__init__()
->            self.label_smooth = label_smooth
->            self.class_num = class_num
->             
->        def forward(self, pred, target):
-=======
->                 def __init__(self, label_smooth=None, class_num=137):
->            super().__init__()
->            self.label_smooth = label_smooth
->            self.class_num = class_num
->    
->                 def forward(self, pred, target):
->>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
->            ''' 
->            Args:
->                pred: prediction of model output    [N, M]
->                target: ground truth of sampler [N]
->            '''
->            eps = 1e-12
-<<<<<<< HEAD
->                     
->            if self.label_smooth is not None:
->                # cross entropy loss with label smoothing
->                logprobs = F.log_softmax(pred, dim=1)	# softmax + log
->                target = F.one_hot(target, self.class_num)	# 转换成one-hot
->                         
->                # label smoothing
-=======
->    
->                             if self.label_smooth is not None:
->                # cross entropy loss with label smoothing
->                logprobs = F.log_softmax(pred, dim=1)	# softmax + log
->                target = F.one_hot(target, self.class_num)	# 转换成one-hot
->    
->                                     # label smoothing
->>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
->                # 实现 1
->                # target = (1.0-self.label_smooth)*target + self.label_smooth/self.class_num 	
->                # 实现 2
->                # implement 2
->                target = torch.clamp(target.float(), min=self.label_smooth/(self.class_num-1), max=1.0-self.label_smooth)
->                loss = -1*torch.sum(target*logprobs, 1)
-<<<<<<< HEAD
->                     
->            else:
->                # standard cross entropy loss
->                loss = -1.*pred.gather(1, target.unsqueeze(-1)) + torch.log(torch.exp(pred+eps).sum(dim=1))
->             
+>    class LabelSmoothing(nn.Module):
+>        """NLL loss with label smoothing.
+>                        """
+>        def __init__(self, smoothing=0.0):
+>            """Constructor for the LabelSmoothing module.
+>            :param smoothing: label smoothing factor
+>            """
+>        	                    super(LabelSmoothing, self).__init__()
+>            self.confidence = 1.0 - smoothing
+>            self.smoothing = smoothing
+>            # 此处的self.smoothing即我们的epsilon平滑参数。
+   
+>                    def forward(self, x, target):
+>            logprobs = torch.nn.functional.log_softmax(x, dim=-1)
+>            nll_loss = -logprobs.gather(dim=-1, index=target.unsqueeze(1))
+>            nll_loss = nll_loss.squeeze(1)
+>            smooth_loss = -logprobs.mean(dim=-1)
+>                        loss = self.confidence * nll_loss + self.smoothing * smooth_loss
 >            return loss.mean()
-=======
->    
->                             else:
->                # standard cross entropy loss
->                loss = -1.*pred.gather(1, target.unsqueeze(-1)) + torch.log(torch.exp(pred+eps).sum(dim=1))
->>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
->    
->                     return loss.mean()
-> 
->    
+   
 
 
 
@@ -380,21 +326,21 @@
 >     - ~~~python
 >       text_descriptions = [f"This is a photo of a {label}" for label in cifar100.classes]
 >       text_tokens = clip.tokenize(text_descriptions).cuda()
->                                                                               
+>                                                                                     
 >       with torch.no_grad():
 >           text_features = model.encode_text(text_tokens).float()
 >           text_features /= text_features.norm(dim=-1, keepdim=True)
->                                                                               
+>                                                                                     
 >       text_probs = (100.0 * image_features @ text_features.T).softmax(dim=-1)
 >       top_probs, top_labels = text_probs.cpu().topk(5, dim=-1)
 >       # 可视化
 >       plt.figure(figsize=(16, 16))
->                                                                               
+>                                                                                     
 >       for i, image in enumerate(original_images):
 >           plt.subplot(4, 4, 2 * i + 1)
 >           plt.imshow(image)
 >           plt.axis("off")
->                                                                               
+>                                                                                     
 >           plt.subplot(4, 4, 2 * i + 2)
 >           y = np.arange(top_probs.shape[-1])
 >           plt.grid()
@@ -403,7 +349,7 @@
 >           plt.gca().set_axisbelow(True)
 >           plt.yticks(y, [cifar100.classes[index] for index in top_labels[i].numpy()])
 >           plt.xlabel("probability")
->                                                                               
+>                                                                                     
 >       plt.subplots_adjust(wspace=0.5)
 >       plt.show()
 >       ~~~
@@ -437,19 +383,19 @@
 >             self.decay = decay
 >             self.shadow = {}
 >             self.backup = {}
->                                                     
+>                                                         
 >     	def register(self):
 >             for name, param in self.model.named_parameters():
 >             	if param.required_grad:
 >                     self.shadow[name] = param.data.clone()
->                                                             
+>                                                                 
 >         def update(self):
 >             for name, param in self.model.named_parameters():
 >                 if param.required_gard:
 >                 	assert name in self.shadow
 >                     new_average = (1.0 - self.decay) * param.data + self.decay * self.shadow[name]
 >                     self.shadow[name] = new_average.clone()
->                                                             
+>                                                                 
 >         def apply_shadow(self):
 >             for name, param in self.model.named_parameters():
 >                 if param.required_grad():
@@ -462,7 +408,7 @@
 >                     assert name in self.backup
 >                     param.data = self.backup[name]
 >             self.backup = {}
->                                                     
+>                                                         
 >     ## 初始化EMA
 >     ema = EMA(model, decay=0.9)
 >     ema.register()
@@ -470,13 +416,13 @@
 >     def train():
 >         optimizer.step()
 >         ema.update()
->                                             
+>                                                 
 >     # eval前，apply shadow weights；eval之后，恢复原来模型的参数
 >     def evaluate():
 >         ema.apply_shadow()
 >         # evaluate
 >         ema.restore()
->                                                             
+>                                                                 
 >     ~~~
 
 ### 5.2 Early-Stop
