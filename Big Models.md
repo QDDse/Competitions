@@ -52,6 +52,12 @@
 
 
 
+### 2. [Megatrion-2]（Sequence Parallel）
+
+[paper](https://arxiv.org/pdf/2205.05198.pdf)
+
+> 
+
 ## 2. ZeRO ---- (面向万亿级model得Memory optimization)
 
 ### 2.1 模型memory usage
@@ -148,7 +154,7 @@
 
 ### 3.4.3 Export Choice -- 改进传统的Token-Choice
 
-[](https://arxiv.org/abs/2202.09368)
+[`paper`](https://arxiv.org/abs/2202.09368)
 
 > - `Token-Choice`：
 >   - 传统MoE（Convenient MoE) 通过Token选择Top-K experts进行路由
@@ -179,7 +185,7 @@
 
 
 
-### 3.4.5 SF-MoE
+### 3.4.5 SF-MoE 
 
 
 
@@ -230,7 +236,7 @@
 > `Contributions`:
 >
 > - `New auxiliary loss`
-> - `BPR`: Routing prioritization <font color=red>(非本文提出)</font>>
+> - `BPR`: Routing prioritization <font color=red>(非本文提出)</font>
 
 
 
@@ -243,6 +249,8 @@
 > - `Parameters`： 1.2T （64 experts per layer and 32 MoE layers）
 > - 激活97B（8% of 1.2T）
 > - [`GSPMD`](https://ai.googleblog.com/2021/12/general-and-scalable-parallelization.html):  本文中用到该architecture
+> - `Expert's subset size` 2 
+> - `relative positional bias` 
 
 ![img](https://blogger.googleusercontent.com/img/a/AVvXsEhKmA36iEaxIj0bSi7IUfctim-muB1B695evFlPNoqkiIbD_mVkkbdslk6HNwEXCBJmGsvxyDYsNTS7-YzZlblcQa2St498_RPwm72uz6jrK8mooPA6-wN4vqNswF-MG8JEPsgj7R4Rsm60Xh1xVLQtSeYrfhNEG4pr-7MbTHYdxjbug845Fy5smz17ZA=w402-h640)
 
@@ -323,5 +331,9 @@
 
 ### 2. Vision MoE
 
-#### 2.1 V-MoE
+### 3 阅读Megaton-LM code
+
+> - 阅读megatron code
+
+
 
