@@ -351,6 +351,64 @@ class gnconv(nn.Module):
 >   <img src="https://pic4.zhimg.com/v2-392d9d14fc64026e0c0b97ead5f2ada3_r.jpg" alt="preview" style="zoom:33%;" />
 >
 >   <img src="https://pic1.zhimg.com/80/v2-1ed6987c14ee88781811844140def1d4_1440w.jpg" alt="img" style="zoom:33%;" />
+>
+>   - `key code`:
+>
+> ~~~py
+> import torch
+> 
+> import matplotlib.pyplot as plt
+> 
+> 
+> def window_partition(x, window_size):
+>     """
+>     Args:
+>         x: (B, H, W, C)
+>         window_size (int): window size
+> 
+>     Returns:
+>         windows: (num_windows*B, window_size, window_size, C)
+>     """
+>     B, H, W, C = x.shape
+>     x = x.view(B, H // window_size, window_size, W // window_size, window_size, C)
+>     windows = x.permute(0, 1, 3, 2, 4, 5).contiguous().view(-1, window_size, window_size, C)
+>     return windows
+> 
+> 
+> window_size = 7
+> shift_size = 3
+> H, W = 56, 56
+> img_mask = torch.zeros((1, H, W, 1))  # 1 H W 1
+> h_slices = (slice(0, -window_size),
+>             slice(-window_size, -shift_size),
+>             slice(-shift_size, None))
+> w_slices = (slice(0, -window_size),
+>             slice(-window_size, -shift_size),
+>             slice(-shift_size, None))
+> cnt = 0
+> for h in h_slices:
+>     for w in w_slices:
+>         img_mask[:, h, w, :] = cnt
+>         cnt += 1
+> 
+> mask_windows_ = window_partition(img_mask, window_size)  # nW, window_size, window_size, 1
+> print(mask_windows_.shape)
+> mask_windows = mask_windows_.view(-1, window_size * window_size)
+> 
+> attn_mask = mask_windows.unsqueeze(1) - mask_windows.unsqueeze(2) # (nW, 1, win_size^2) - (nW, win_size^2, 1)
+> attn_mask = attn_mask.masked_fill(attn_mask != 0, float(-100.0)).masked_fill(attn_mask == 0, float(0.0))
+> 
+> plt.matshow(img_mask[0, :, :, 0].numpy())
+> plt.matshow(attn_mask[0].numpy())
+> plt.matshow(attn_mask[1].numpy())
+> plt.matshow(attn_mask[2].numpy())
+> plt.matshow(attn_mask[3].numpy())
+> 
+> plt.show()
+> ## 同一个region内的token彼此attention是work， 但是不同region的token之间不work！
+> ~~~
+>
+> 
 
 <img src="https://user-images.githubusercontent.com/42901638/115496492-5d5e6f80-a29c-11eb-8cbf-76aff3e40d7e.png" alt="image" style="zoom:67%;" />
 
