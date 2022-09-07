@@ -19,69 +19,10 @@
 >       def __init__(self, dim, num_heads=8, qkv_bias=False, qk_scale=None, attn_drop=0., proj_drop=0., sr_ratio=1):
 >           super(Attention, self).__init__()
 >           assert dim % num_heads == 0
-<<<<<<< HEAD
->               
 >           self.dim = dim
->           self.num_heads = num_heads
+>             self.num_heads = num_heads
 >           head_dim = dim // num_heads
->               
-=======
->                   
->           self.dim = dim
->           self.num_heads = num_heads
->           head_dim = dim // num_heads
->                   
->>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
->           self.scale = qk_scale or head_dim ** -0.5
->           self.q = nn.Linear(dim, dim, bias=qkv_bias)
->           self.kv = nn.Linear(dim, dim * 2, bias=qkv_bias)
->           self.attn_drop = nn.Dropout(attn_drop)
->           self.proj = nn.Linear(dim ,dim)
->           self.proj_drop = nn.Dropout(proj_drop)
->           self.sr_ratio = sr_ratio
->           ## conv
->           if sr_ratio > 1:
->               self.sr = nn.Conv2d(dim, dim, kernel_size=sr_ratio, stride=sr_ratio)
->               self.norm = nn.LayerNorm(dim)
-<<<<<<< HEAD
->               
-=======
->                   
->>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
->       def forward(self, x, H, W):
->           B, N, C = x.shape
->           q = self.q(x).reshape(B, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3)
->           ## einops更加优雅
->           # q = rearrange(self.q(x), 'b n (h c) -> b h n c', h=self.num_heads)
->           if self.sr_ratio > 1:
->               x_ = x.permute(0,2,1).reshape(B, C, H, W)
->               x_ = self.sr(x_).reshape(B, C, -1).permute(0,2,1)
->               x_ = self.norm(x_)
->               kv = self.kv(x_).reshape(B, -1, 2, self.num_heads, C // self.num_heads).permute(2,0,3,1,4)
->               print('kv_shape:{}'.format(kv.shape))
->           else:
->               kv = self.kv(x).reshape(B, -1, 2, self.num_heads, C // self.num_heads).permute(2,0,3,1,4)
->               print('kv_shape:{}'.format(kv.shape))
->           k, v = kv[0], kv[1]  # (B, H, n, c)
-<<<<<<< HEAD
->               
-=======
->                   
->>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
->           attn = (q @ k.transpose(-2, -1)) * self.scale
->           print('attn_shape:{}'.format(attn.shape))
->           attn = attn.softmax(dim=-1)
->           attn = self.attn_drop(attn)
-<<<<<<< HEAD
->               
-=======
->                   
->>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
->           x = (attn @ v).transpose(1,2).reshape(B, N, C)
->           print('output_shape:{}'.format(x.shape))
->           x = self.proj(x)
->           return self.proj_drop(x)
->   ~~~
+> 
 
 ![image-20220810143459304](https://raw.githubusercontent.com/QDDse/MD_images/main/image-20220810143459304.png)
 
@@ -139,104 +80,43 @@
 >               self.kv = nn.Linear(dim, dim * 2, bias=qkv_bias)
 >               self.local_conv = nn.Conv2d(dim, dim, kernel_size=3, padding=1, stride=1, groups=dim)
 >           self.apply(self._init_weights)
-<<<<<<< HEAD
->      
-=======
->          
->>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
+>             
 >       def forward(self, x, H, W):
 >           B, N, C = x.shape
 >           q = self.q(x).reshape(B, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3)
 >           if self.sr_ratio > 1:
->                   x_ = x.permute(0, 2, 1).reshape(B, C, H, W)
->                   x_1 = self.act(self.norm1(self.sr1(x_).reshape(B, C, -1).permute(0, 2, 1)))
->                   x_2 = self.act(self.norm2(self.sr2(x_).reshape(B, C, -1).permute(0, 2, 1)))
->                   kv1 = self.kv1(x_1).reshape(B, -1, 2, self.num_heads//2, C // self.num_heads).permute(2, 0, 3, 1, 4)
->                   kv2 = self.kv2(x_2).reshape(B, -1, 2, self.num_heads//2, C // self.num_heads).permute(2, 0, 3, 1, 4)
->                   k1, v1 = kv1[0], kv1[1] #B head N C
->                   k2, v2 = kv2[0], kv2[1]
->                   attn1 = (q[:, :self.num_heads//2] @ k1.transpose(-2, -1)) * self.scale
->                   attn1 = attn1.softmax(dim=-1)
->                   attn1 = self.attn_drop(attn1)
->                   v1 = v1 + self.local_conv1(v1.transpose(1, 2).reshape(B, -1, C//2).
->                                           transpose(1, 2).view(B,C//2, H//self.sr_ratio, W//self.sr_ratio)).\
->                       view(B, C//2, -1).view(B, self.num_heads//2, C // self.num_heads, -1).transpose(-1, -2)
->                   x1 = (attn1 @ v1).transpose(1, 2).reshape(B, N, C//2)
->                   attn2 = (q[:, self.num_heads // 2:] @ k2.transpose(-2, -1)) * self.scale
->                   attn2 = attn2.softmax(dim=-1)
->                   attn2 = self.attn_drop(attn2)
->                   v2 = v2 + self.local_conv2(v2.transpose(1, 2).reshape(B, -1, C//2).
->                                           transpose(1, 2).view(B, C//2, H*2//self.sr_ratio, W*2//self.sr_ratio)).\
->                       view(B, C//2, -1).view(B, self.num_heads//2, C // self.num_heads, -1).transpose(-1, -2)
->                   x2 = (attn2 @ v2).transpose(1, 2).reshape(B, N, C//2)
-<<<<<<< HEAD
->      
-=======
->          
->>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
->                   x = torch.cat([x1,x2], dim=-1)
->           else:
->               kv = self.kv(x).reshape(B, -1, 2, self.num_heads, C // self.num_heads).permute(2, 0, 3, 1, 4)
->               k, v = kv[0], kv[1]
->               attn = (q @ k.transpose(-2, -1)) * self.scale
->               attn = attn.softmax(dim=-1)
->               attn = self.attn_drop(attn)
->               x = (attn @ v).transpose(1, 2).reshape(B, N, C) + self.local_conv(v.transpose(1, 2).reshape(B, N, C).
->                                           transpose(1, 2).view(B,C, H, W)).view(B, C, N).transpose(1, 2)
->           x = self.proj(x)
->           x = self.proj_drop(x)
->           return x
->   ~~~
+>           x_ = x.permute(0, 2, 1).reshape(B, C, H, W)
+>           x_1 = self.act(self.norm1(self.sr1(x_).reshape(B, C, -1).permute(0, 2, 1)))
+>           x_2 = self.act(self.norm2(self.sr2(x_).reshape(B, C, -1).permute(0, 2, 1)))
+>           kv1 = self.kv1(x_1).reshape(B, -1, 2, self.num_heads//2, C // self.num_heads).permute(2, 0, 3, 1, 4)
+>           kv2 = self.kv2(x_2).reshape(B, -1, 2, self.num_heads//2, C // self.num_heads).permute(2, 0, 3, 1, 4)
+>           k1, v1 = kv1[0], kv1[1] #B head N C
+>           k2, v2 = kv2[0], kv2[1]
+>           attn1 = (q[:, :self.num_heads//2] @ k1.transpose(-2, -1)) * self.scale
+>           attn1 = attn1.softmax(dim=-1)
+>           attn1 = self.attn_drop(attn1)
+>           v1 = v1 + self.local_conv1(v1.transpose(1, 2).reshape(B, -1, C//2).
+>                      transpose(1, 2).view(B,C//2, H//self.sr_ratio, W//self.sr_ratio)).\
+>           view(B, C//2, -1).view(B, self.num_heads//2, C // self.num_heads, -1).transpose(-1, -2)
+>           x1 = (attn1 @ v1).transpose(1, 2).reshape(B, N, C//2)
+>           attn2 = (q[:, self.num_heads // 2:] @ k2.transpose(-2, -1)) * self.scale
+>           attn2 = attn2.softmax(dim=-1)
+>           attn2 = self.attn_drop(attn2)
+>           v2 = v2 + self.local_conv2(v2.transpose(1, 2).reshape(B, -1, C//2).
+>                      transpose(1, 2).view(B, C//2, H*2//self.sr_ratio, W*2//self.sr_ratio)).\
+>           view(B, C//2, -1).view(B, self.num_heads//2, C // self.num_heads, -1).transpose(-1, -2)
+>           x2 = (attn2 @ v2).transpose(1, 2).reshape(B, N, C//2)
+>
+> 
+>
 > - `Detail Specofic`: 即**DW-Conv**
 >
 >   - ![img](https://raw.githubusercontent.com/QDDse/MD_images/main/ada64f45205645d2b0ef165d8b988451.png)
 >
->   - ~~~python
->     class Mlp(nn.Module):
->         def __init__(self, in_features, hidden_features=None, out_features=None, act_layer=nn.GELU, drop=0.):
->             super().__init__()
->             out_features = out_features or in_features
->             hidden_features = hidden_features or in_features
->             self.fc1 = nn.Linear(in_features, hidden_features)
->             self.dwconv = DWConv(hidden_features)
->             self.act = act_layer()
->             self.fc2 = nn.Linear(hidden_features, out_features)
->             self.drop = nn.Dropout(drop)
-<<<<<<< HEAD
->          
-=======
->                  
->>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
->         def forward(self, x, H, W):
->             x = self.fc1(x)
->             x = self.act(x + self.dwconv(x, H, W))  # 残差连接，这里和图画的顺序不一样，图应该画错了
->             x = self.drop(x)
->             x = self.fc2(x)
->             x = self.drop(x)
->             return x
-<<<<<<< HEAD
->          
-=======
->                  
->>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
->     class DWConv(nn.Module):
->         def __init__(self, dim=768):
->             super(DWConv, self).__init__()
->             self.dwconv = nn.Conv2d(dim, dim, 3, 1, 1, bias=True, groups=dim)
-<<<<<<< HEAD
->          
-=======
->                  
->>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
->         def forward(self, x, H, W):
->             B, N, C = x.shape
->             x = x.transpose(1, 2).view(B, C, H, W)
->             x = self.dwconv(x)
->             x = x.flatten(2).transpose(1, 2)
->             return x
->     ~~~
 >
->   - 
+> 
+>
+> 
 
 
 
@@ -335,10 +215,6 @@ class Net(nn.Module):
 
 
 model = Net().to(device)
-~~~
-
-<<<<<<< HEAD
-
 
 ## About Transformer
 
@@ -398,29 +274,11 @@ def relative_to_absolute(q):
     final_x = flat_x_padded.reshape(b, h, l + 1, 2 * l - 1)
     final_x = final_x[:, :, :l, (l - 1):]
     return final_x
-=======
-### 1.5 Focal Transformer ----- (NIPS2021)
-
-> - [`知乎`](https://zhuanlan.zhihu.com/p/417106453)
->
-> - [`Arxiv`](https://arxiv.org/pdf/2107.00641.pdf)
-
-------
-
-# Self-Supervisied Learning
-
-## 2. MIM (Mask Image Model)
-
-### 2.1 BEiT (BERT in CV)
 
 
+~~~
 
-## *Modules
-
-### 1. Hornet---- `gnConv`
-
-![preview](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/v2-e5945dd4540aa19f36b3a66a7117778d_r.jpg)
-
+### 1.5 Hornet---- `gnConv`
 ~~~python
 ## 官方实现 GnConv2d
 ### GnConv 本身是sequence2sequence module： 输入输出为同维度
@@ -467,6 +325,22 @@ class gnconv(nn.Module):
         x = self.proj_out(x) 
 
         return x
->>>>>>> 6ae5b41a341ff4110c2670423a757e124c91b028
 ~~~
 
+### 1.5 Focal Transformer ----- (NIPS2021)
+
+> - [`知乎`](https://zhuanlan.zhihu.com/p/417106453)
+>
+> - [`Arxiv`](https://arxiv.org/pdf/2107.00641.pdf)
+
+
+
+### 1.6 Swin-Transformer (MoE)
+
+
+
+# Self-Supervisied Learning
+
+## 2. MIM (Mask Image Model)
+
+### 2.1 BEiT (BERT in CV)
