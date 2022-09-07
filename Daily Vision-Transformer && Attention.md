@@ -80,7 +80,7 @@
 >               self.kv = nn.Linear(dim, dim * 2, bias=qkv_bias)
 >               self.local_conv = nn.Conv2d(dim, dim, kernel_size=3, padding=1, stride=1, groups=dim)
 >           self.apply(self._init_weights)
->             
+>                 
 >       def forward(self, x, H, W):
 >           B, N, C = x.shape
 >           q = self.q(x).reshape(B, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3)
@@ -276,8 +276,6 @@ def relative_to_absolute(q):
     return final_x
 
 
-~~~
-
 ### 1.5 Hornet---- `gnConv`
 ~~~python
 ## 官方实现 GnConv2d
@@ -336,6 +334,27 @@ class gnconv(nn.Module):
 
 
 ### 1.6 Swin-Transformer (MoE)
+
+[code](https://github.com/microsoft/Swin-Transformer/)
+
+- `torchinfo_summary`:
+
+<img src="https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/image-20220907172748560.png" alt="image-20220907172748560" style="zoom:67%;" />
+
+> - `SW-Attention`
+>
+>   - 第一步: `torch.roll`,tensor移动
+>   - 第二部： `img_mask` -- > `attn_mask`,位置相同则work_attn, 不同则not work
+>
+>   <img src="https://pic2.zhimg.com/v2-fe69e3e4c8d9cb8d7092da8c249201fd_r.jpg" alt="preview" style="zoom: 33%;" />
+>
+>   <img src="https://pic4.zhimg.com/v2-392d9d14fc64026e0c0b97ead5f2ada3_r.jpg" alt="preview" style="zoom:33%;" />
+>
+>   <img src="https://pic1.zhimg.com/80/v2-1ed6987c14ee88781811844140def1d4_1440w.jpg" alt="img" style="zoom:33%;" />
+
+<img src="https://user-images.githubusercontent.com/42901638/115496492-5d5e6f80-a29c-11eb-8cbf-76aff3e40d7e.png" alt="image" style="zoom:67%;" />
+
+
 
 
 
