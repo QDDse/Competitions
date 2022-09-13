@@ -80,7 +80,7 @@
 >               self.kv = nn.Linear(dim, dim * 2, bias=qkv_bias)
 >               self.local_conv = nn.Conv2d(dim, dim, kernel_size=3, padding=1, stride=1, groups=dim)
 >           self.apply(self._init_weights)
->                 
+>                   
 >       def forward(self, x, H, W):
 >           B, N, C = x.shape
 >           q = self.q(x).reshape(B, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3)
@@ -411,6 +411,46 @@ class gnconv(nn.Module):
 > 
 
 <img src="https://user-images.githubusercontent.com/42901638/115496492-5d5e6f80-a29c-11eb-8cbf-76aff3e40d7e.png" alt="image" style="zoom:67%;" />
+
+
+
+
+
+### 1.7 Cross ViT
+
+[paper](https://arxiv.org/abs/2103.14899)
+
+### 1.8 DeiT
+
+[paper](https://arxiv.org/abs/2012.12877)[知乎](https://zhuanlan.zhihu.com/p/344085679)
+
+
+
+### 1.9 Going deeper ViT
+
+[paper](https://arxiv.org/abs/2103.17239)
+
+
+
+
+
+### 1.10 T2T_ViT
+
+[paper](https://arxiv.org/abs/2101.11986)[知乎](https://zhuanlan.zhihu.com/p/359930253)
+
+
+
+### 1.11 Deepvit
+
+[paper](https://arxiv.org/abs/2103.11886)
+
+
+
+## 1.12 TimeSformer
+
+[paper](https://arxiv.org/abs/2102.05095)
+
+
 
 
 
