@@ -10,9 +10,9 @@
 
 - 可迭代的对象--> iterable
 
-  - list、 dict、 tuple
+  - list、 dict、 tuple (**可以放在for loop中的都是iterable**) 
 
-  - 含有 ____iter____() 方法并且iter() 返回的是一个包含next（）方法的迭代器
+  - 含有` __iter__()` 方法并且`iter()` 返回的是一个包含`next（）`方法的迭代器
 
     ~~~python
     ## 可以放在for loop
@@ -24,8 +24,8 @@
 
 -  iterator ----> 迭代器
 
-  - class 中包含有____next__ __() 方法
-  - iterator 可以直接调用next()函数 一个一个返回containor中的数据。
+  - class 中包含有``__next__()` 方法
+  - iterator 可以直接调用`next()`函数 一个一个返回containor中的数据。
   - list、dict、tuple这些是iterable 而不是 iterator
 
 ------
@@ -105,7 +105,33 @@ void traverse(Graph graph, int s){
 
 ## 3. Tree
 
+> - `Tree`算法主要依赖于遍历。 
+> - 可以利用`栈` 进行树的迭代遍历
+> - 重要性质：
+>   - n 个顶点， n-1的边
+>   - 任何一个节点到根节点存在`唯一`路径，路径的长度为节点所处的深度
+
+> `Binary Tree`（二叉树）：
+>
+> - 相关算法题：
+>   - 94,
+>   - 102
+>   - 103
+>   - 144
+>   - 145
+>   - 199
+> - `堆`： 本质就是二叉树 ， 一种优先队列`Priority queue`
+>   - 295
+> - `Binary Sort Tree`（二叉查找树）：
+>   - 中序遍历是有序数列
+>   - 98
+> - `二叉平衡树` 
+> - `红黑树`： 有良好的最坏运行情况，可以在O(logn)内完成查找，insert，delete
+
 ### 3.1 Trie（字典树）
+
+> - 根节点不包含字符， 除root以外的node都只包含一个字符
+> - 每个节点的所有子节点包含的字符都不相同
 
 ~~~c++
 class Trie{
@@ -583,5 +609,9 @@ int main(){
 
 
 
+### 2. 链表
 
+> <font size=4, color=red> 各种数据结构底层本质都是数组和链表</font>
+>
+> 
 

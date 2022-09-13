@@ -80,7 +80,7 @@
 >               self.kv = nn.Linear(dim, dim * 2, bias=qkv_bias)
 >               self.local_conv = nn.Conv2d(dim, dim, kernel_size=3, padding=1, stride=1, groups=dim)
 >           self.apply(self._init_weights)
->                 
+>                   
 >       def forward(self, x, H, W):
 >           B, N, C = x.shape
 >           q = self.q(x).reshape(B, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3)
@@ -421,3 +421,12 @@ class gnconv(nn.Module):
 ## 2. MIM (Mask Image Model)
 
 ### 2.1 BEiT (BERT in CV)
+
+[paper](https://arxiv.org/abs/2106.08254) [github](https://github.com/microsoft/unilm/tree/master/beit)
+
+[paper_v2](https://arxiv.org/abs/2208.06366)
+
+[paper_3](https://arxiv.org/pdf/2208.10442.pdf)
+
+> - 该github 目前集成了`BeiT`, `BEiTv2`, `HuggingFace`
+> - 
