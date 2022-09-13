@@ -416,6 +416,46 @@ class gnconv(nn.Module):
 
 
 
+### 1.7 Cross ViT
+
+[paper](https://arxiv.org/abs/2103.14899)
+
+### 1.8 DeiT
+
+[paper](https://arxiv.org/abs/2012.12877)[知乎](https://zhuanlan.zhihu.com/p/344085679)
+
+
+
+### 1.9 Going deeper ViT
+
+[paper](https://arxiv.org/abs/2103.17239)
+
+
+
+
+
+### 1.10 T2T_ViT
+
+[paper](https://arxiv.org/abs/2101.11986)[知乎](https://zhuanlan.zhihu.com/p/359930253)
+
+
+
+### 1.11 Deepvit
+
+[paper](https://arxiv.org/abs/2103.11886)
+
+
+
+## 1.12 TimeSformer
+
+[paper](https://arxiv.org/abs/2102.05095)
+
+
+
+
+
+
+
 # Self-Supervisied Learning
 
 ## 2. MIM (Mask Image Model)
