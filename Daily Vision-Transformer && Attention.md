@@ -80,7 +80,7 @@
 >               self.kv = nn.Linear(dim, dim * 2, bias=qkv_bias)
 >               self.local_conv = nn.Conv2d(dim, dim, kernel_size=3, padding=1, stride=1, groups=dim)
 >           self.apply(self._init_weights)
->                   
+>                     
 >       def forward(self, x, H, W):
 >           B, N, C = x.shape
 >           q = self.q(x).reshape(B, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3)
@@ -444,11 +444,17 @@ class gnconv(nn.Module):
 
 [paper](https://arxiv.org/abs/2103.11886)
 
-
-
-## 1.12 TimeSformer
+### 1.12 TimeSformer
 
 [paper](https://arxiv.org/abs/2102.05095)
+
+### 1.13 Mobile ViT
+
+[paper](https://arxiv.org/abs/2110.02178) [github](https://github.com/apple/ml-cvnets)  [Repo](https://github.com/WZMIAOMIAO/deep-learning-for-image-processing/tree/master/pytorch_classification/MobileViT)
+
+<img src="https://img-blog.csdnimg.cn/73aa3a646e0447fa9f00b0a673a95ddb.png" alt="img" style="zoom:150%;" />
+
+
 
 
 
