@@ -890,3 +890,9 @@ optimizer = optim.Adam(
 )
 ~~~
 
+------
+
+
+
+# Table Compositions
+

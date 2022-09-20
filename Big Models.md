@@ -187,8 +187,6 @@
 
 ### 3.4.5 SF-MoE 
 
-
-
 ### 3.4.6 Swin-MoE（Microsoft） TUTEL 
 
 [Swin-transformer](https://github.com/microsoft/Swin-Transformer)
@@ -229,9 +227,7 @@
 
 ![](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgSZvvfrRuopj58bPE0B7bGxdeJKRbksIrdWOdF_MC4N2fndx6-rfEt0E9IzI4Qag_sTtGm9vFzv-2y_iOOLHhu2oFJ9lRK-lqpyypFBow3cz9beeDHu6Ji9ePTQcWv6B6RSWUZG6CBqkbLuG_JGm7nehPnMQ_sqtcUGH5_ll6K5sOvMXfvC1zCZ_Y9qg/s1600/image3.gif)
 
-​		                                                                                                 **LIMoE Architecture**
-
-
+​		                                      **LIMoE Architecture**
 
 > `Contributions`:
 >
