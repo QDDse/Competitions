@@ -105,9 +105,86 @@ void traverse(Graph graph, int s){
 
 ## 3. Tree
 
+![img](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/0081Kckwly1gkybjfbpubj30uo0u0gqz.jpg)
+
 > - `Tree`算法主要依赖于遍历。 
-> - 可以利用`栈` 进行树的迭代遍历
-> - 重要性质：
+> - 可以利用`栈` 进行树的迭代遍历（`双色标记法`）:
+>
+> ~~~py
+> class Solution:
+>     def inorderTraversal(self, root: TreeNode):## 实现中序迭代遍历 
+>         ## 定义WHITE，GRAY WHITE 表示尚未访问，GRAY表示已经访问
+>         WHITE, GRAY  = 0, 1
+>         res = [] # 返回的 result list
+>         stack = [(WHITE, root)] ##对于root 尚未访问 入栈
+>         while stack:
+>             color, node = stack.pop()
+>             if node == None: continue # 如果到叶节点的空孩子，弹出下一个node
+>             if color == WHITE:
+>                 ## 从右子树开始入栈， pop出来就是左，中，右（inOrder）
+>                 stack.append((WHITE, node.right))
+>                 stack.append((GRAY, node))
+>                 stack.append((WHITE, node.left))
+>             else: # 如果该node已经访问，则将其加入res
+>                 res.append(node.val)
+>         return res
+>     
+> ~~~
+>
+> ![img](https://tva1.sinaimg.cn/large/0081Kckwly1gkq01o7423j31gg0u0dwg.jpg)
+>
+> - `DFS && BFS`:
+>
+>   - `DFS`: 可以细分为前中后序遍历 **(Stack)**:
+>
+>   - `BFS`: 与<font color=red>层次遍历不是一个东西</font>, 适合求<font color=green>最短距离/路径</font> （Leetcode513）**（Queue）**：
+>
+>     - `标记层`:
+>
+>     ~~~py
+>     def bfs(k, root: Optional[TreeNode] -> int:
+>             queue = collections.deque([root])
+>             ## 记录层数
+>             steps = 0
+>             ## 需要返回的node
+>             ans = []
+>             while queue:
+>             	size = len(queue) ## 取queue中的list 个数即为当前的层的node_num
+>             	for _ in size:
+>             		node = queue.popleft()
+>             		if (steps == k): ans.append(node)
+>            			if node.right: queue.append(node.right)
+>             		if node.left: queue.append(node.left)
+>             	## 遍历完当前层 steps ++
+>             	steps += 1
+>             return ans
+>     ~~~
+>
+>     - `未标记层`:
+>
+> ~~~py
+> def bfs(k, root: Optional[TreeNode]) -> int:
+>     ## 定一一个双端队列
+>     queue = collections.deque([root])
+>     ## queue 不空则一直迭代
+>     while queue:
+>         node = queue.popleft()
+>         if (node 满足condition): return node.val
+>     	if node.right:
+>             queue.append(node.right)
+>         if node.left:
+>             queue.append(node.left)
+>         return -1
+> 	
+>     
+> ~~~
+>
+> - `三种题型`:搜索类，构建类和修改类
+>   - 搜索类
+>   - 构建类
+>   - 修改类
+>
+> - `重要性质`：
 >   - n 个顶点， n-1的边
 >   - 任何一个节点到根节点存在`唯一`路径，路径的长度为节点所处的深度
 
