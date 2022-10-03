@@ -20,16 +20,16 @@
 >         cut_rat = np.sqrt(1. - lam)
 >         cut_w = np.int(W * cut_rat)
 >         cut_h = np.int(H * cut_rat)
->         
+>           
 >         # uniform
 >         cx = np.random.randint(W)
 >         cy = np.random.randint(H)
->         
+>           
 >         bbx1 = np.clip(cx - cut_w // 2, 0, W)
 >         bby1 = np.clip(cy - cut_h // 2, 0, H)
 >         bbx2 = np.clip(cx + cut_w // 2, 0, W)
 >         bby2 = np.clip(cy + cut_h // 2, 0, H)
->         
+>           
 >         return bbx1, bby1, bbx2, bby2
 >     def cutmix(data, targets1, targets2, targets3, alpha):
 >         indices = torch.randperm(data.size(0))
@@ -37,36 +37,36 @@
 >         shuffled_targets1 = targets1[indices]
 >         shuffled_targets2 = targets2[indices]
 >         shuffled_targets3 = targets3[indices]
->         
+>           
 >         lam = np.random.beta(alpha, alpha)
 >         bbx1, bby1, bbx2, bby2 = rand_bbox(data.size(), lam)
 >         data[:, :, bbx1:bbx2, bby1:bby2] = data[indices, :, bbx1:bbx2, bby1:bby2]
 >         # adjust lambda to exactly match pixel ratio
 >         lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (data.size()[-1] * data.size()[-2]))
->         
+>           
 >         targets = [targets1, shuffled_targets1, targets2, shuffled_targets2, targets3, shuffled_targets3, lam]
 >         return data, targets
->         
+>           
 >     def mixup(data, targets1, targets2, targets3, alpha):
 >         indices = torch.randperm(data.size(0))
 >         shuffled_data = data[indices]
 >         shuffled_targets1 = targets1[indices]
 >         shuffled_targets2 = targets2[indices]
 >         shuffled_targets3 = targets3[indices]
->         
+>           
 >         lam = np.random.beta(alpha, alpha)
 >         data = data * lam + shuffled_data * (1 - lam)
 >         targets = [targets1, shuffled_targets1, targets2, shuffled_targets2, targets3, shuffled_targets3, lam]
->         
+>           
 >         return data, targets
->         
+>           
 >     ~~~
 >     
 >   - ~~~py
 >     ## 利用torchtoolbox以及Timm实现!!
 >     !pip install torchtoolbox
 >     from torchtoolbox.transform import Cutout
->         
+>           
 >     ### 数据预处理
 >     transform = transfroms.Compose([
 >         transforms.Resize((224, 224)),
@@ -89,7 +89,7 @@
 >         'num_classes': 1000}
 >     mixup_fn = 
 >     criterion_train = SoftTargetCrossEntropy()
->             
+>               
 >     ~~~
 >
 >   - 
@@ -159,7 +159,7 @@ for input, output in data:
 > + ~~~python
 >   ## 一套用法
 >   einsum(equation, *operands)
->                                       
+>                                         
 >   1
 >   ~~~
 >
@@ -204,12 +204,12 @@ for input, output in data:
 >         else:
 >             modulator = torch.exp(-gamma * labels * logits - gamma * torch.log(1 + 
 >                 torch.exp(-1.0 * logits)))
->                                             
+>                                                 
 >         loss = modulator * BCLoss
->                                             
+>                                                 
 >         weighted_loss = alpha * loss
 >         focal_loss = torch.sum(weighted_loss)
->                                             
+>                                                 
 >         focal_loss /= torch.sum(labels)
 >         return 
 >     ~~~
@@ -268,16 +268,16 @@ for input, output in data:
 >         effective_num = 1.0 - np.power(beta, samples_per_cls)
 >         weights = (1.0 - beta) / np.array(effective_num)
 >         weights = weights / np.sum(weights) * no_of_classes
->                                             
+>                                                 
 >         labels_one_hot = F.one_hot(labels, no_of_classes).float()
->                                             
+>                                                 
 >         weights = torch.tensor(weights).float()
 >         weights = weights.unsqueeze(0)
 >         weights = weights.repeat(labels_one_hot.shape[0],1) * labels_one_hot
 >         weights = weights.sum(1)
 >         weights = weights.unsqueeze(1)
 >         weights = weights.repeat(1,no_of_classes)
->                                             
+>                                                 
 >         if loss_type == "focal":
 >             cb_loss = focal_loss(labels_one_hot, logits, weights, gamma)
 >         elif loss_type == "sigmoid":
@@ -286,7 +286,7 @@ for input, output in data:
 >             pred = logits.softmax(dim = 1)
 >             cb_loss = F.binary_cross_entropy(input = pred, target = labels_one_hot, weight = weights)
 >         return cb_loss
->                                             
+>                                                 
 >     ~~~
 
 - `Label-Smoothing`:
@@ -382,21 +382,21 @@ for input, output in data:
 >     - ~~~python
 >       text_descriptions = [f"This is a photo of a {label}" for label in cifar100.classes]
 >       text_tokens = clip.tokenize(text_descriptions).cuda()
->                                                                                                             
+>                                                                                                                   
 >       with torch.no_grad():
 >           text_features = model.encode_text(text_tokens).float()
 >           text_features /= text_features.norm(dim=-1, keepdim=True)
->                                                                                                             
+>                                                                                                                   
 >       text_probs = (100.0 * image_features @ text_features.T).softmax(dim=-1)
 >       top_probs, top_labels = text_probs.cpu().topk(5, dim=-1)
 >       # 可视化
 >       plt.figure(figsize=(16, 16))
->                                                                                                             
+>                                                                                                                   
 >       for i, image in enumerate(original_images):
 >           plt.subplot(4, 4, 2 * i + 1)
 >           plt.imshow(image)
 >           plt.axis("off")
->                                                                                                             
+>                                                                                                                   
 >           plt.subplot(4, 4, 2 * i + 2)
 >           y = np.arange(top_probs.shape[-1])
 >           plt.grid()
@@ -405,7 +405,7 @@ for input, output in data:
 >           plt.gca().set_axisbelow(True)
 >           plt.yticks(y, [cifar100.classes[index] for index in top_labels[i].numpy()])
 >           plt.xlabel("probability")
->                                                                                                             
+>                                                                                                                   
 >       plt.subplots_adjust(wspace=0.5)
 >       plt.show()
 >       ~~~
@@ -439,19 +439,19 @@ for input, output in data:
 >             self.decay = decay
 >             self.shadow = {}
 >             self.backup = {}
->                                                                         
+>                                                                             
 >     	def register(self):
 >             for name, param in self.model.named_parameters():
 >             	if param.required_grad:
 >                     self.shadow[name] = param.data.clone()
->                                                                                 
+>                                                                                     
 >         def update(self):
 >             for name, param in self.model.named_parameters():
 >                 if param.required_gard:
 >                 	assert name in self.shadow
 >                     new_average = (1.0 - self.decay) * param.data + self.decay * self.shadow[name]
 >                     self.shadow[name] = new_average.clone()
->                                                                                 
+>                                                                                     
 >         def apply_shadow(self):
 >             for name, param in self.model.named_parameters():
 >                 if param.required_grad():
@@ -464,7 +464,7 @@ for input, output in data:
 >                     assert name in self.backup
 >                     param.data = self.backup[name]
 >             self.backup = {}
->                                                                         
+>                                                                             
 >     ## 初始化EMA
 >     ema = EMA(model, decay=0.9)
 >     ema.register()
@@ -472,13 +472,13 @@ for input, output in data:
 >     def train():
 >         optimizer.step()
 >         ema.update()
->                                                                 
+>                                                                     
 >     # eval前，apply shadow weights；eval之后，恢复原来模型的参数
 >     def evaluate():
 >         ema.apply_shadow()
 >         # evaluate
 >         ema.restore()
->                                                                                 
+>                                                                                     
 >     ~~~
 
 ### 5.2 Early-Stop
@@ -734,7 +734,7 @@ sc.woebin_plot(bins)
 >     import pandas as pd
 >     colormap = sns.color_palette('Blues')
 >     sns.heatmap(train.corr(), annot=True, cmap=colormap)
->         
+>             
 >     ~~~
 >
 >   ![image-20220907012035883](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/image-20220907012035883.png)
@@ -750,6 +750,18 @@ sc.woebin_plot(bins)
 ## 1. Gumbel-Softmax Trick
 
 [`知乎`](<img src="https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/image-20220830145134844.png"/>)
+
+`Gumbel distribution`: 
+
+<img src="C:\Users\int.zihao.gong\AppData\Roaming\Typora\typora-user-images\image-20221003214520469.png" alt="image-20221003214520469" style="zoom:50%;" />
+
+与服从gumbel 分布的新sample 范式
+
+
+$$
+X_i = argmax(log(p_i) + g_i)
+$$
+
 
 > 从离散分布中采样不能求导BP， 因此设计一个公式用于求导
 >
