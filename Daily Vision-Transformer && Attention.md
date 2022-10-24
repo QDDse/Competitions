@@ -80,7 +80,7 @@
 >               self.kv = nn.Linear(dim, dim * 2, bias=qkv_bias)
 >               self.local_conv = nn.Conv2d(dim, dim, kernel_size=3, padding=1, stride=1, groups=dim)
 >           self.apply(self._init_weights)
-<<<<<<< HEAD
+  <<<<<<< HEAD
 >                             
 =======
 >                           
@@ -470,8 +470,9 @@ class gnconv(nn.Module):
 
 ​                                                                         HorNet 结构
 
->
-> 
+
+
+### 1.15 SegNext -- [NIPS2022](https://arxiv.org/pdf/2209.08575.pdf)
 
 
 

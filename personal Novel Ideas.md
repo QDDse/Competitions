@@ -26,3 +26,16 @@
 ### 1.3 MoE的路由 --> 
 
 > - MoE 本身的路由是对其中的不同卷积进行TopK，可以试试将Softmax 的输出直接作用在其网络之后。将不同expert分工协作
+
+
+
+##  2. Reference Papers
+
+### 2.1 CondConv
+
+### 2.2  CoE -- With 100M FLOPs Achieving 80%acc@1 in imagenet
+
+[ICML2022](https://arxiv.org/abs/2107.03815)
+
+
+
