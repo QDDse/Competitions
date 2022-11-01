@@ -80,7 +80,7 @@
 >               self.kv = nn.Linear(dim, dim * 2, bias=qkv_bias)
 >               self.local_conv = nn.Conv2d(dim, dim, kernel_size=3, padding=1, stride=1, groups=dim)
 >           self.apply(self._init_weights)
-  <<<<<<< HEAD
+    <<<<<<< HEAD
 >                             
 =======
 >                           
@@ -489,7 +489,28 @@ class gnconv(nn.Module):
 [paper_3](https://arxiv.org/pdf/2208.10442.pdf)
 
 > - 该github 目前集成了`BeiT`, `BEiTv2`, `HuggingFace`
-> - 
+
+
+
+### 2.2 iGPT
+
+[ICML2020](https://cdn.openai.com/papers/Generative_Pretraining_from_Pixels_V2.pdf)
+
+[OpenAI's Blog](https://openai.com/blog/image-gpt/)
+
+​	
+
+​	典型的OpenAI式风格，万物皆可往GPT靠。
+
+
+
+### 2.3 MAE 
+
+![image-20221029165727811](https://raw.githubusercontent.com/QDDse/MD_images/main/MD_images/image-20221029165727811.png)
+
+
+
+
 
 ------
 
