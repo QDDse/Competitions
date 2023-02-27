@@ -1,4 +1,4 @@
-# Big Models (SY实习notes)、
+# Big Models (SY实习notes)
 
 [TOC]
 
@@ -252,6 +252,20 @@
 
 
 
+## Diffusion Models
+
+### 1. Categories
+
+
+
+### 2. Scheduler
+
+
+
+
+
+
+
 ## MPI通信的方式
 
 ### Broadcast
@@ -321,11 +335,15 @@
   - `world_size`: 总的进程数
 - `nn.utils.data.DistributedSampler`: 为各个进程切分数据以保证数据non-overlap
 
-## Workspace
+
+
+
+
+## Arbitrary Issues
+
+
 
 ### 1. Tools 之 Einsum， Einops
-
-### 2. Vision MoE
 
 ### 3 阅读Megaton-LM code
 

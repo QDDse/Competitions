@@ -514,6 +514,24 @@ class gnconv(nn.Module):
 
 ------
 
+# Diffusion Models
+
+
+
+## 1. LDM(Latent Diffusion Models) --- Stable Diffusion predecessor
+
+
+
+
+
+
+
+
+
+------
+
+
+
 
 
 # Litter in CV
